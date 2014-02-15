@@ -3,4 +3,7 @@
 *.ans
 
 *.cpp~
+.gitignore~
+
+*.comp
 

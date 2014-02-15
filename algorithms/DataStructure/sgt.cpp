@@ -1,7 +1,12 @@
 #include<cstdio>
 #include<algorithm>
+#define lson u << 1
+#define rson u << 1 | 1
+#define T_MAX 300001
 
 using namespace std;
+
+int A[100001];
 
 namespace sgt {
 	struct Node {
@@ -14,7 +19,7 @@ namespace sgt {
 
 	inline void Cover(int u, int C) {
 		T[u].min += C;
-		T[u].tag += C:
+		T[u].tag += C;
 	}
 
 	inline void Push(int u) {
