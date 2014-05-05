@@ -4,6 +4,7 @@
 
 *.cpp~
 .gitignore~
+.DS_Store
 
 *.comp
 
