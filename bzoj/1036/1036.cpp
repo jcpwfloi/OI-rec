@@ -22,6 +22,10 @@ inline ll gI() {
 }
 
 int first[maxn], nex[maxm], to[maxm], w[maxn], s[maxn];
+int son[maxn], n;
+int dfn[maxn];
+int top[maxn];
+int cnt = 0, depth = 0;
 
 namespace sgt {
     struct ifo {
@@ -98,10 +102,15 @@ namespace treed {
 	son[u] = maxnum;
     }
     inline void dfs2(int u, int father) {
+	dfn[u] = ++depth;
 	if (!top[u]) top[u] = u;
+	if (son[u]) {
+	    top[son[u]] = top[u];
+	    dfs2(son[u], u);
+	}
 	for (int i = first[u]; i; i = nex[i]) {
 	    int v = to[i];
-	    if (v != father) {
+	    if (v != father && v != son[u]) {
 		dfs2(v, u);
 	    }
 	}
