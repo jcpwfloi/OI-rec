@@ -1,11 +1,13 @@
 #include<cstdio>
 #include<algorithm>
+#include<cstring>
 #define T_MAX 120001
 #define maxn 30001
 #define maxm 30001
 #define lson u << 1
 #define rson u << 1 | 1
 #define gi gI()
+#define gs gS()
 #define rep(i, l, r) for (int i = l; i <= r; i++)
 
 using namespace std;
@@ -21,8 +23,19 @@ inline ll gI() {
     return p * flag;
 }
 
+inline char* gS() {
+    int cnt = 0;
+    char *temp;
+    char c = getchar();
+    while (c == ' ' || c == '\n' || c == '\r') c = getchar();
+    temp = new char[10];
+    while (c != '\n' && c != ' ' && c != '\r') temp[cnt++] = c, c = getchar();
+    return temp;
+}
+
 int first[maxn], nex[maxm], to[maxm], w[maxn], s[maxn];
-int son[maxn], n;
+int D[maxn], p[maxn];
+int son[maxn], n, q;
 int dfn[maxn];
 int top[maxn];
 int cnt = 0, depth = 0;
@@ -87,6 +100,7 @@ namespace treed {
     }
     inline void dfs1(int u, int father) {
 	s[u] = 1;
+	p[u] = father == -1 ? 1 : father;
 	int maxs = 0, maxnum = 0;
 	for (int i = first[u]; i; i = nex[i]) {
 	    int v = to[i];
@@ -102,6 +116,7 @@ namespace treed {
 	son[u] = maxnum;
     }
     inline void dfs2(int u, int father) {
+	D[u] = father != -1 ? D[father] + 1 : 1;
 	dfn[u] = ++depth;
 	if (!top[u]) top[u] = u;
 	if (son[u]) {
@@ -117,18 +132,77 @@ namespace treed {
     }
     void readTree() {
 	n = gi;
+	sgt::Build(1, 1, n);
 	rep(i, 1, n - 1) {
 	    int u = gi, v = gi;
 	    addEdge(u, v);
 	    addEdge(v, u);
 	}
-	rep(i, 1, n) w[i] = gi;
+	rep(i, 1, n) {
+	    w[i] = gi;
+	    sgt::Edit(1, dfn[i], w[i]);
+	}
+	dfs1(1, -1);
+	dfs2(1, -1);
+    }
+    sgt::ifo getInfo(int u, int v) {
+	sgt::ifo ans;
+	while (top[u] != top[v]) {
+	    int compu = top[u] == u ? p[u] : top[u];
+	    int compv = top[v] == v ? p[v] : top[v];
+	    if (D[compu] < D[compv]) swap(u, v);
+	    else {
+		if (D[compu] == D[compv] && D[u] < D[v]) swap(u, v);
+	    }
+	    if (u != top[u]) {
+		ans.merge(sgt::Query(1, dfn[top[u]] + 1, dfn[u]));
+		printf("Call sgt::Query(1, %d, %d) = {%d, %d}\n", dfn[top[u]] + 1, dfn[u], sgt::Query(1, dfn[top[u]] + 1, dfn[u]).max, 0);
+		u = top[u];
+	    } else {
+		ans.merge(sgt::ifo(w[u]));
+		u = p[u];
+	    }
+	}
+	if (D[u] < D[v]) swap(u, v);
+	if (u == v) {
+	    ans.merge(sgt::ifo(w[top[u]]));
+	    return ans;
+	} else {
+	    ans.merge(sgt::Query(1, dfn[v], dfn[u]));
+	    return ans;
+	}
+    }
+    int QMAX(int u, int v) {
+	return getInfo(u, v).max;
+    }
+    int QSUM(int u, int v) {
+	return getInfo(u, v).sum;
+    }
+    void CHANGE(int x, int C) {
+	sgt::Edit(1, dfn[x], C);
     }
     void work() {
+	q = gi;
+	rep(i, 1, q) {
+	    char *cmdt;
+	    cmdt = gs;
+	    int u = gi, v = gi;
+	    if (cmdt[1] == 'M') { //QMAX
+		printf("%d\n", QMAX(u, v));
+	    } else if (cmdt[0] == 'C') { //CHANGE
+		CHANGE(u, v);
+	    } else if (cmdt[1] == 'S') { //QSUM
+		printf("%d\n", QSUM(u, v));
+	    }
+	}
     }
 }
 
 int main() {
+#ifndef ONLINE_JUDGE
+    freopen("1036.in", "r", stdin);
+    //freopen("1036.out", "w", stdout);
+#endif
     treed::readTree();
     treed::work();
     return 0;
