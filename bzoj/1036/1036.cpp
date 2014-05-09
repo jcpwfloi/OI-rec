@@ -74,7 +74,7 @@ namespace sgt {
 	Update(u);
     }
 }
-/*
+
 namespace treed {
     inline void addEdge(int u, int v) {
 	nex[++cnt] = first[u];
@@ -87,7 +87,7 @@ namespace treed {
 	for (int i = first[u]; i; i = nex[i]) {
 	    int v = to[i];
 	    if (v != father) {
-		dfs1(v);
+		dfs1(v, u);
 		s[u] += s[v];
 		if (s[v] > maxs) {
 		    maxs = s[v];
@@ -98,6 +98,13 @@ namespace treed {
 	son[u] = maxnum;
     }
     inline void dfs2(int u, int father) {
+	if (!top[u]) top[u] = u;
+	for (int i = first[u]; i; i = nex[i]) {
+	    int v = to[i];
+	    if (v != father) {
+		dfs2(v, u);
+	    }
+	}
     }
     void readTree() {
 	n = gi;
@@ -110,11 +117,11 @@ namespace treed {
     }
     void work() {
     }
-}*/
+}
 
 int main() {
-    //treed::readTree();
-    //treed::work();
+    treed::readTree();
+    treed::work();
     return 0;
 }
 
