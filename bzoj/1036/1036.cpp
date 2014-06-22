@@ -156,7 +156,7 @@ namespace treed {
 	    }
 	    if (u != top[u]) {
 		ans.merge(sgt::Query(1, dfn[top[u]] + 1, dfn[u]));
-		printf("Call sgt::Query(1, %d, %d) = {%d, %d}\n", dfn[top[u]] + 1, dfn[u], sgt::Query(1, dfn[top[u]] + 1, dfn[u]).max, 0);
+		//printf("Call sgt::Query(1, %d, %d) = {%d, %d}\n", dfn[top[u]] + 1, dfn[u], sgt::Query(1, dfn[top[u]] + 1, dfn[u]).max, 0);
 		u = top[u];
 	    } else {
 		ans.merge(sgt::ifo(w[u]));
