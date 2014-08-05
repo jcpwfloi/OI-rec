@@ -59,7 +59,6 @@ inline info Query(int u, int L, int R) {
     if (R >= T[rson].L) ans = ans + Query(rson, L, R);
     return ans;
 }
-
 inline void Build(int u, int L, int R) {
     T[u].L = L;
     T[u].R = R;
